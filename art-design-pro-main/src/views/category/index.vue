@@ -10,22 +10,22 @@
       :show-search-button="true"
       @search="handleSearch"
       @reset="handleReset"
-    >
-      <template #right>
-        <ElSpace wrap>
-          <ElButton type="primary" @click="showDialog('add', 'class')" v-ripple>
-            + 新增菜品分类
-          </ElButton>
-          <ElButton type="primary" @click="showDialog('add', 'meal')" v-ripple>
-            + 新增套餐分类
-          </ElButton>
-        </ElSpace>
-      </template>
-    </ArtSearchBar>
+    />
 
     <ElCard class="art-table-card" shadow="never">
       <!-- 表格头部 -->
-      <ArtTableHeader v-model:columns="columnChecks" :loading="loading" @refresh="refreshData" />
+      <ArtTableHeader v-model:columns="columnChecks" :loading="loading" @refresh="refreshData">
+        <template #left>
+          <ElSpace wrap>
+            <ElButton type="primary" size="small" @click="showDialog('add', 'class')" v-ripple>
+              + 新增菜品分类
+            </ElButton>
+            <ElButton type="primary" size="small" @click="showDialog('add', 'meal')" v-ripple>
+              + 新增套餐分类
+            </ElButton>
+          </ElSpace>
+        </template>
+      </ArtTableHeader>
 
       <!-- 表格 -->
       <ArtTable
@@ -48,23 +48,18 @@
       width="500px"
       :before-close="handleClose"
     >
-      <ArtForm
-        ref="formRef"
-        :model="formData"
-        :rules="rules"
-        label-width="100px"
-      >
-        <ArtFormItem label="分类名称：" prop="name">
+      <ElForm ref="formRef" :model="formData" :rules="rules" label-width="100px">
+        <ElFormItem label="分类名称：" prop="name">
           <ElInput v-model="formData.name" placeholder="请输入分类名称" maxlength="20" />
-        </ArtFormItem>
-        <ArtFormItem label="排序：" prop="sort">
+        </ElFormItem>
+        <ElFormItem label="排序：" prop="sort">
           <ElInput v-model="formData.sort" placeholder="请输入排序" />
-        </ArtFormItem>
-      </ArtForm>
+        </ElFormItem>
+      </ElForm>
       <template #footer>
         <ElButton @click="handleClose">取 消</ElButton>
-        <ElButton type="primary" @click="submitForm">确 定</ElButton>
-        <ElButton v-if="dialogType !== 'edit'" type="primary" @click="submitForm('go')">
+        <ElButton type="primary" @click="() => submitForm()">确 定</ElButton>
+        <ElButton v-if="dialogType !== 'edit'" type="primary" @click="() => submitForm('go')">
           保存并继续添加
         </ElButton>
       </template>
@@ -117,6 +112,7 @@ const searchForm = ref({
 // 搜索项配置
 const searchItems = [
   {
+    key: 'name',
     prop: 'name',
     label: '分类名称',
     component: 'ElInput',
@@ -126,6 +122,7 @@ const searchItems = [
     }
   },
   {
+    key: 'type',
     prop: 'type',
     label: '分类类型',
     component: 'ElSelect',
@@ -258,7 +255,7 @@ const {
 /**
  * 搜索处理
  */
-const handleSearch = (params: Record<string, any>) => {
+const handleSearch = (params: Record<string, any> = {}) => {
   isSearch.value = true
   Object.assign(searchParams, params)
   getData()
@@ -275,8 +272,14 @@ const handleReset = () => {
 /**
  * 显示弹窗
  */
-const showDialog = (type: 'add' | 'edit', categoryType?: 'class' | 'meal', row?: any) => {
+const showDialog = (type: 'add' | 'edit', categoryTypeOrRow?: 'class' | 'meal' | any, rowArg?: any) => {
   dialogType.value = type
+
+  // 编辑场景：第二个参数可能直接就是 row（旧调用方式）
+  const row = type === 'edit' ? rowArg || categoryTypeOrRow : undefined
+  // 新增场景：按第一或第二按钮决定分类类型
+  const categoryType = type === 'add' ? (categoryTypeOrRow as 'class' | 'meal' | undefined) : undefined
+
   if (type === 'add') {
     if (categoryType === 'class') {
       dialogTitle.value = '新增菜品分类'
@@ -290,11 +293,19 @@ const showDialog = (type: 'add' | 'edit', categoryType?: 'class' | 'meal', row?:
     formData.sort = ''
   } else {
     dialogTitle.value = '修改分类'
-    formData.id = row.id
-    formData.name = row.name
-    formData.sort = row.sort
+    if (!row || !row.id) {
+      console.warn('[分类管理] 缺少待编辑行数据')
+      dialogVisible.value = false
+      return
+    }
+    formData.id = row.id || ''
+    formData.name = row.name || ''
+    formData.sort = row.sort ?? ''
+    formData.type = row.type ? String(row.type) : formData.type || '1'
   }
+
   nextTick(() => {
+    formRef.value?.clearValidate?.()
     dialogVisible.value = true
   })
 }

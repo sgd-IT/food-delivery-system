@@ -65,6 +65,15 @@ export const editEmployee = (params: any) => {
 }
 
 /**
+ * 删除员工
+ */
+export const deleteEmployee = (id: string | number) => {
+  return request.delete({
+    url: `/admin/employee/${id}`
+  })
+}
+
+/**
  * 根据ID查询员工详情
  */
 export const queryEmployeeById = (id: string | (string | null)[]) => {

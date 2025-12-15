@@ -6,8 +6,8 @@
     :before-close="handleClose"
     class="cancelDialog"
   >
-    <ArtForm label-width="90px">
-      <ArtFormItem :label="title + '原因：'">
+    <ElForm label-width="90px">
+      <ElFormItem :label="title + '原因：'">
         <ElSelect v-model="cancelReason" :placeholder="'请选择' + title + '原因'">
           <ElOption
             v-for="(item, index) in reasonList"
@@ -16,16 +16,16 @@
             :value="item.label"
           />
         </ElSelect>
-      </ArtFormItem>
-      <ArtFormItem v-if="cancelReason === '自定义原因'" label="原因：">
+      </ElFormItem>
+      <ElFormItem v-if="cancelReason === '自定义原因'" label="原因：">
         <ElInput
           v-model.trim="remark"
           type="textarea"
           :placeholder="'请填写您' + title + '的原因（限20字内）'"
           maxlength="20"
         />
-      </ArtFormItem>
-    </ArtForm>
+      </ElFormItem>
+    </ElForm>
     <template #footer>
       <ElButton @click="handleClose">取 消</ElButton>
       <ElButton type="primary" @click="handleConfirm">确 定</ElButton>
@@ -35,7 +35,7 @@
 
 <script setup lang="ts">
 import { ref, computed } from 'vue'
-import { ElDialog, ElSelect, ElOption, ElInput, ElButton, ElMessage } from 'element-plus'
+import { ElDialog, ElForm, ElFormItem, ElSelect, ElOption, ElInput, ElButton, ElMessage } from 'element-plus'
 
 defineOptions({ name: 'CancelOrderDialog' })
 

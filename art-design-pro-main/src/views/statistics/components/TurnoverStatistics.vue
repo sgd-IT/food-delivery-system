@@ -26,7 +26,7 @@ defineOptions({ name: 'TurnoverStatistics' })
 interface Props {
   turnoverData: {
     dateList: string[]
-    turnoverList: string[]
+    turnoverList: number[]
   }
 }
 

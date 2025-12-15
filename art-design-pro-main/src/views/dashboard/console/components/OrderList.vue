@@ -237,7 +237,7 @@
               <div class="dish-amount w-[300px]">
                 <span class="amount-name">菜品小计：</span>
                 <span class="amount-price">
-                  ￥{{ ((diaForm.amount - 6 - diaForm.packAmount) || 0).toFixed(2) }}
+                  ￥{{ ((diaForm.amount - 6 - (diaForm.packAmount || 2)) || 0).toFixed(2) }}
                 </span>
               </div>
               <div class="send-amount w-[300px]">
@@ -247,7 +247,7 @@
               <div class="package-amount w-[300px]">
                 <span class="amount-name">打包费：</span>
                 <span class="amount-price">
-                  ￥{{ diaForm.packAmount ? diaForm.packAmount.toFixed(2) : '0.00' }}
+                  ￥{{ (diaForm.packAmount || 2).toFixed(2) }}
                 </span>
               </div>
               <div class="all-amount w-[300px]">

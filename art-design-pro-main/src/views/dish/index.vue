@@ -10,22 +10,22 @@
       :show-search-button="true"
       @search="handleSearch"
       @reset="handleReset"
-    >
-      <template #right>
-        <ElSpace wrap>
-          <ElButton type="danger" :disabled="selectedRows.length === 0" @click="deleteHandle('批量', null)" v-ripple>
-            批量删除
-          </ElButton>
-          <ElButton type="primary" @click="addDishtype('add')" v-ripple>
-            + 新建菜品
-          </ElButton>
-        </ElSpace>
-      </template>
-    </ArtSearchBar>
+    />
 
     <ElCard class="art-table-card" shadow="never">
       <!-- 表格头部 -->
-      <ArtTableHeader v-model:columns="columnChecks" :loading="loading" @refresh="refreshData" />
+      <ArtTableHeader v-model:columns="columnChecks" :loading="loading" @refresh="refreshData">
+        <template #left>
+          <ElSpace wrap>
+            <ElButton type="primary" size="small" @click="addDishtype('add')" v-ripple>
+              + 新建菜品
+            </ElButton>
+            <ElButton type="danger" size="small" :disabled="selectedRows.length === 0" @click="deleteHandle('批量', null)" v-ripple>
+              批量删除
+            </ElButton>
+          </ElSpace>
+        </template>
+      </ArtTableHeader>
 
       <!-- 表格 -->
       <ArtTable
@@ -153,10 +153,12 @@
 import { ref, reactive, h, onMounted, computed, watch, nextTick } from 'vue'
 import { useTable } from '@/hooks/core/useTable'
 import { getDishPage, deleteDish, dishStatusByStatus, dishCategoryList, queryDishById, addDish, editDish } from '@/api/dish'
-import { ElMessageBox, ElMessage, ElTag, ElButton as ElBtn, ElImage, ElDialog, ElIcon } from 'element-plus'
+import { ElMessageBox, ElMessage, ElTag, ElButton as ElBtn, ElImage, ElDialog, ElIcon, ElInput, ElSelect, ElOption, ElUpload } from 'element-plus'
 import { Plus } from '@element-plus/icons-vue'
 import { useUserStore } from '@/store/modules/user'
 import ArtButtonTable from '@/components/core/forms/art-button-table/index.vue'
+import ArtForm from '@/components/core/forms/art-form-wrapper/index.vue'
+import ArtFormItem from '@/components/core/forms/art-form-item/index.vue'
 import SelectInput from './components/SelectInput.vue'
 
 defineOptions({ name: 'Dish' })
@@ -277,30 +279,30 @@ const searchForm = ref({
 // 搜索项配置
 const searchItems = computed(() => [
   {
-    prop: 'name',
+    key: 'name',
     label: '菜品名称',
-    component: 'ElInput',
-    componentProps: {
+    type: 'input',
+    props: {
       placeholder: '请填写菜品名称',
       clearable: true
     }
   },
   {
-    prop: 'categoryId',
+    key: 'categoryId',
     label: '菜品分类',
-    component: 'ElSelect',
-    componentProps: {
-      placeholder: '请选择',
+    type: 'select',
+    props: {
+      placeholder: '请选择菜品分类',
       clearable: true,
       options: dishCategoryListOptions.value
     }
   },
   {
-    prop: 'status',
+    key: 'status',
     label: '售卖状态',
-    component: 'ElSelect',
-    componentProps: {
-      placeholder: '请选择',
+    type: 'select',
+    props: {
+      placeholder: '请选择售卖状态',
       clearable: true,
       options: saleStatusOptions
     }
@@ -404,15 +406,38 @@ const {
 const getDishCategoryList = async () => {
   try {
     const res = await dishCategoryList({ type: 1 })
+    console.log('[菜品分类] API 响应:', res)
+    
+    // 处理不同的响应格式
+    let categoryList: any[] = []
+    
     if (Array.isArray(res)) {
-      dishCategoryListOptions.value = res.map((item: any) => ({
+      // 直接是数组
+      categoryList = res
+    } else if (res && typeof res === 'object' && 'data' in res) {
+      // 包装在 data 字段中
+      const data = (res as any).data
+      if (Array.isArray(data)) {
+        categoryList = data
+      } else if (data && Array.isArray(data.list)) {
+        categoryList = data.list
+      } else if (data && Array.isArray(data.records)) {
+        categoryList = data.records
+      }
+    }
+    
+    if (categoryList.length > 0) {
+      dishCategoryListOptions.value = categoryList.map((item: any) => ({
         value: item.id,
         label: item.name
       }))
-      dishCategoryListForForm.value = res.map((item: any) => ({
+      dishCategoryListForForm.value = categoryList.map((item: any) => ({
         id: item.id,
         name: item.name
       }))
+      console.log('[菜品分类] 处理后的选项:', dishCategoryListOptions.value)
+    } else {
+      console.warn('[菜品分类] 未找到分类数据')
     }
   } catch (err) {
     console.error('获取菜品分类列表失败:', err)
@@ -509,10 +534,50 @@ const beforeUpload = (file: File): boolean => {
 /**
  * 搜索处理
  */
-const handleSearch = (params: Record<string, any>) => {
+/**
+ * 搜索处理
+ */
+const handleSearch = () => {
   isSearch.value = true
+  // 从 searchForm 获取表单数据
+  const params: Record<string, any> = { ...searchForm.value }
+  
+  // 处理 categoryId 类型转换（确保是数字类型，后端期望 Integer）
+  if (params.categoryId !== undefined && params.categoryId !== null && params.categoryId !== '') {
+    params.categoryId = Number(params.categoryId)
+    // 如果转换失败，设置为 undefined
+    if (isNaN(params.categoryId)) {
+      params.categoryId = undefined
+    }
+  } else {
+    params.categoryId = undefined
+  }
+  
+  // 处理 status 类型转换（确保是数字类型）
+  if (params.status !== undefined && params.status !== null && params.status !== '') {
+    params.status = Number(params.status)
+    if (isNaN(params.status)) {
+      params.status = undefined
+    }
+  } else {
+    params.status = undefined
+  }
+  
+  // 清除空字符串
+  if (params.name === '' || !params.name) {
+    params.name = undefined
+  }
+  
+  // 添加调试日志
+  if (process.env.NODE_ENV === 'development') {
+    console.log('[菜品搜索] 搜索参数:', params)
+    console.log('[菜品搜索] categoryId 类型:', typeof params.categoryId, '值:', params.categoryId)
+  }
+  
+  // 更新搜索参数
   Object.assign(searchParams, params)
-  getData()
+  // 调用 getData，它会自动重置到第一页并清空缓存
+  getData(params)
 }
 
 /**
@@ -562,13 +627,20 @@ const initEditData = async (id: string) => {
   try {
     const res = await queryDishById(id)
     if (res) {
+      // 处理描述字段：过滤掉问号（可能是编码问题导致的）
+      let description = res.description || ''
+      // 如果描述全是问号，清空它
+      if (description && /^[?？]+$/.test(description)) {
+        description = ''
+      }
+      
       Object.assign(formData, {
         name: res.name || '',
         id: res.id || '',
         price: String(res.price || ''),
         code: res.code || '',
         image: res.image || '',
-        description: res.description || '',
+        description: description,
         categoryId: res.categoryId || '',
         status: res.status == '1'
       })

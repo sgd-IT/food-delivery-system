@@ -2,6 +2,7 @@ package com.sky.controller.admin;
 
 import com.sky.result.Result;
 import com.sky.service.ReportService;
+import com.sky.service.WorkspaceService;
 import com.sky.vo.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,18 +13,23 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletResponse;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 /**
  * 数据统计相关接口
  */
 
-@RestController("adminreportController")
+@RestController
 @RequestMapping("/admin/report")
 @Slf4j
 public class ReportController {
 
     @Autowired
     private ReportService reportService;
+
+    @Autowired
+    private WorkspaceService workspaceService;
 
     /**
      * 营业额统计
@@ -81,6 +87,24 @@ public class ReportController {
         log.info("查询销量排名top10 {} , {}", begin, end);
         SalesTop10ReportVO top10ReportVO = reportService.getSalesTop10(begin, end);
         return Result.success(top10ReportVO);
+    }
+
+    /**
+     * 数据概览
+     *
+     * @param begin
+     * @param end
+     * @return
+     */
+    @GetMapping({"/dataOverView", "/dataOverview"})
+    public Result<BusinessDataVO> dataOverView(@DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate begin,
+                                               @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate end) {
+        log.info("数据概览：{}，{}", begin, end);
+        BusinessDataVO businessDataVO = workspaceService.getBusinessData(
+                LocalDateTime.of(begin, LocalTime.MIN),
+                LocalDateTime.of(end, LocalTime.MAX)
+        );
+        return Result.success(businessDataVO);
     }
 
     /**

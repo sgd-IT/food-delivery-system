@@ -66,12 +66,12 @@ export const get1stAndToday = (): string[] => {
 }
 
 /**
- * 获取近7日
+ * 获取近7日（包括今天）
  */
 export const past7Day = (): string[] => {
   const toData = new Date(new Date().toLocaleDateString()).getTime()
-  const past7daysStart = toData - 7 * 3600 * 24 * 1000
-  const past7daysEnd = toData - 1
+  const past7daysStart = toData - 6 * 3600 * 24 * 1000  // 改为6天前，加上今天共7天
+  const past7daysEnd = toData + 24 * 60 * 60 * 1000 - 1  // 包括今天
   const days7Start = dateFormat('YYYY-mm-dd', past7daysStart)
   const days7End = dateFormat('YYYY-mm-dd', past7daysEnd)
   return [days7Start, days7End]

@@ -84,9 +84,9 @@ const changedOrderList = computed(() => {
   ]
 })
 
-const tabChange = (activeIndex: number) => {
-  activeIndex.value = activeIndex
-  emit('tabChange', activeIndex)
+const tabChange = (value: number) => {
+  activeIndex.value = value
+  emit('tabChange', value)
 }
 </script>
 

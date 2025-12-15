@@ -101,6 +101,9 @@ public class OrderServiceImpl implements OrderService {
             } else {
                 orders.setOrderType(ordersSubmitDTO.getOrderType());
             }
+            
+            // 固定打包费为2元
+            orders.setPackAmount(2);
 
             // 根据订单类型处理地址信息
             if (orders.getOrderType() == 1) {

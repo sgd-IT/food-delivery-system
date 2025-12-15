@@ -10,17 +10,17 @@
       :show-search-button="true"
       @search="handleSearch"
       @reset="handleReset"
-    >
-      <template #right>
-        <ElButton type="primary" @click="addEmployeeHandle('add')" v-ripple>
-          + 添加员工
-        </ElButton>
-      </template>
-    </ArtSearchBar>
+    />
 
     <ElCard class="art-table-card" shadow="never">
       <!-- 表格头部 -->
-      <ArtTableHeader v-model:columns="columnChecks" :loading="loading" @refresh="refreshData" />
+      <ArtTableHeader v-model:columns="columnChecks" :loading="loading" @refresh="refreshData">
+        <template #left>
+          <ElButton type="primary" size="small" @click="addEmployeeHandle('add')" v-ripple>
+            + 添加员工
+          </ElButton>
+        </template>
+      </ArtTableHeader>
 
       <!-- 表格 -->
       <ArtTable
@@ -44,34 +44,34 @@
       :before-close="handleClose"
       destroy-on-close
     >
-      <ArtForm ref="formRef" :model="formData" :rules="rules" label-width="120px">
-        <ArtFormItem label="账号" prop="username">
+      <ElForm ref="formRef" :model="formData" :rules="rules" label-width="120px">
+        <ElFormItem label="账号" prop="username">
           <ElInput v-model="formData.username" placeholder="请输入账号" maxlength="20" />
-        </ArtFormItem>
+        </ElFormItem>
 
-        <ArtFormItem label="员工姓名" prop="name">
+        <ElFormItem label="员工姓名" prop="name">
           <ElInput v-model="formData.name" placeholder="请输入员工姓名" maxlength="12" />
-        </ArtFormItem>
+        </ElFormItem>
 
-        <ArtFormItem label="手机号" prop="phone">
+        <ElFormItem label="手机号" prop="phone">
           <ElInput v-model="formData.phone" placeholder="请输入手机号" maxlength="11" />
-        </ArtFormItem>
+        </ElFormItem>
 
-        <ArtFormItem label="性别" prop="sex">
+        <ElFormItem label="性别" prop="sex">
           <ElRadioGroup v-model="formData.sex">
             <ElRadio label="男" />
             <ElRadio label="女" />
           </ElRadioGroup>
-        </ArtFormItem>
+        </ElFormItem>
 
-        <ArtFormItem label="身份证号" prop="idNumber">
+        <ElFormItem label="身份证号" prop="idNumber">
           <ElInput v-model="formData.idNumber" placeholder="请输入身份证号" maxlength="20" />
-        </ArtFormItem>
-      </ArtForm>
+        </ElFormItem>
+      </ElForm>
       <template #footer>
         <ElButton @click="handleClose">取 消</ElButton>
-        <ElButton type="primary" @click="submitForm">确 定</ElButton>
-        <ElButton v-if="dialogType === 'add'" type="primary" @click="submitForm('continue')">
+        <ElButton type="primary" @click="() => submitForm()">确 定</ElButton>
+        <ElButton v-if="dialogType === 'add'" type="primary" @click="() => submitForm('continue')">
           保存并继续添加
         </ElButton>
       </template>
@@ -82,7 +82,14 @@
 <script setup lang="ts">
 import { ref, h, reactive, nextTick } from 'vue'
 import { useTable } from '@/hooks/core/useTable'
-import { getEmployeeList, enableOrDisableEmployee, queryEmployeeById, addEmployee, editEmployee } from '@/api/employee'
+import {
+  getEmployeeList,
+  enableOrDisableEmployee,
+  queryEmployeeById,
+  addEmployee,
+  editEmployee,
+  deleteEmployee
+} from '@/api/employee'
 import { ElMessageBox, ElMessage, ElTag, ElButton as ElBtn, ElDialog } from 'element-plus'
 import ArtButtonTable from '@/components/core/forms/art-button-table/index.vue'
 
@@ -98,7 +105,7 @@ const dialogTitle = ref('添加员工')
 const formRef = ref()
 
 // 表单数据
-const formData = reactive({
+const formData = reactive<Record<'name' | 'phone' | 'sex' | 'idNumber' | 'username', string>>({
   name: '',
   phone: '',
   sex: '男',
@@ -179,6 +186,7 @@ const searchForm = ref({
 // 搜索项配置
 const searchItems = [
   {
+    key: 'name',
     prop: 'name',
     label: '员工姓名',
     component: 'ElInput',
@@ -239,8 +247,11 @@ const {
           return h('div', { class: 'flex gap-2' }, [
             h(ArtButtonTable, {
               type: 'edit',
-              disabled: isAdmin,
               onClick: () => addEmployeeHandle(row.id, row.username)
+            }),
+            h(ArtButtonTable, {
+              type: 'delete',
+              onClick: () => deleteHandle(row)
             }),
             h(
               ElBtn,
@@ -262,7 +273,7 @@ const {
 /**
  * 搜索处理
  */
-const handleSearch = (params: Record<string, any>) => {
+const handleSearch = (params: Record<string, any> = {}) => {
   isSearch.value = true
   Object.assign(searchParams, params)
   getData()
@@ -307,7 +318,7 @@ const showDialog = async (type: 'add' | 'edit', id?: string) => {
  */
 const initEditData = async (id: string) => {
   try {
-    const res = await queryEmployeeById(id)
+    const res: any = await queryEmployeeById(id)
     if (res) {
       Object.assign(formData, {
         name: res.name || '',
@@ -405,6 +416,27 @@ const statusHandle = (row: any) => {
         .catch((err: any) => {
           ElMessage.error('请求出错了：' + err.message)
         })
+    })
+    .catch(() => {})
+}
+
+/**
+ * 删除员工
+ */
+const deleteHandle = (row: any) => {
+  if (row.username === 'admin') {
+    ElMessage.warning('admin 账号不允许删除')
+    return
+  }
+  ElMessageBox.confirm('确认删除该员工吗？', '提示', {
+    confirmButtonText: '确定',
+    cancelButtonText: '取消',
+    type: 'warning'
+  })
+    .then(async () => {
+      await deleteEmployee(row.id)
+      ElMessage.success('删除成功！')
+      refreshData()
     })
     .catch(() => {})
 }

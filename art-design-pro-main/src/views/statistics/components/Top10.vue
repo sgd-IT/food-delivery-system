@@ -21,7 +21,7 @@ defineOptions({ name: 'Top10' })
 interface Props {
   top10Data: {
     nameList: string[]
-    numberList: string[]
+    numberList: number[]
   }
 }
 
@@ -30,4 +30,6 @@ defineProps<Props>()
 
 <style lang="scss" scoped>
 </style>
+
+
 

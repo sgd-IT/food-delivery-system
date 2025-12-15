@@ -17,8 +17,8 @@
             <ElEmpty description="暂无数据" />
           </div>
           <ElCheckboxGroup v-if="dishList.length > 0" v-model="checkedList" @change="checkedListHandle">
-            <div v-for="(item, index) in dishList" :key="item.name + item.id" class="items">
-              <ElCheckbox :key="index" :label="item.name">
+            <div v-for="(item, index) in dishList" :key="item.id || item.dishId" class="items">
+              <ElCheckbox :key="index" :label="item.id || item.dishId">
                 <div class="item">
                   <span style="flex: 3; text-align: left">{{ item.dishName }}</span>
                   <span>{{ item.status == 0 ? '停售' : '在售' }}</span>
@@ -33,10 +33,10 @@
     <div class="rit-cont">
       <div class="tit">已选菜品({{ checkedListAll.length }})</div>
       <div class="items">
-        <div v-for="(item, ind) in checkedListAll" :key="ind" class="item">
+        <div v-for="(item, ind) in checkedListAll" :key="item.id || item.dishId || ind" class="item">
           <span>{{ item.dishName || item.name }}</span>
           <span class="price">￥ {{ ((Number(item.price) * 100) / 100).toFixed(2) }} </span>
-          <span class="del" @click="delCheck(item.name)">
+          <span class="del" @click="delCheck(item)">
             <ElIcon><Close /></ElIcon>
           </span>
         </div>
@@ -71,7 +71,7 @@ const dishType = ref<any[]>([])
 const dishList = ref<any[]>([])
 const allDishList = ref<any[]>([])
 const keyInd = ref(0)
-const checkedList = ref<string[]>([])
+const checkedList = ref<number[]>([])
 const checkedListAll = ref<any[]>([])
 const ids = new Set()
 
@@ -90,7 +90,7 @@ watch(
  */
 const init = () => {
   getDishType()
-  checkedList.value = props.checkList.map((it: any) => it.name)
+  checkedList.value = props.checkList.map((it: any) => it.id || it.dishId)
   checkedListAll.value = [...props.checkList].reverse()
 }
 
@@ -167,23 +167,25 @@ const checkTypeHandle = (ind: number, id: any) => {
 /**
  * 添加菜品
  */
-const checkedListHandle = (value: string[]) => {
+const checkedListHandle = (value: number[]) => {
   checkedListAll.value.reverse()
   const list = allDishList.value.filter((item: any) => {
-    return value.some((it: any) => item.name === it)
+    const itemId = item.id || item.dishId
+    return value.some((it: any) => itemId === it)
   })
 
   const dishListCat = [...checkedListAll.value, ...list]
-  const arrData: string[] = []
+  const arrData: number[] = []
   checkedListAll.value = dishListCat.filter((item: any) => {
+    const itemId = item.id || item.dishId
     let allArrDate
     if (arrData.length == 0) {
-      arrData.push(item.name)
+      arrData.push(itemId)
       allArrDate = item
     } else {
-      const st = arrData.some((it) => item.name === it)
+      const st = arrData.some((it) => itemId === it)
       if (!st) {
-        arrData.push(item.name)
+        arrData.push(itemId)
         allArrDate = item
       }
     }
@@ -192,7 +194,8 @@ const checkedListHandle = (value: string[]) => {
 
   if (value.length < arrData.length) {
     checkedListAll.value = checkedListAll.value.filter((item: any) => {
-      if (value.some((it) => it == item.name)) {
+      const itemId = item.id || item.dishId
+      if (value.some((it) => it == itemId)) {
         return item
       }
     })
@@ -204,9 +207,10 @@ const checkedListHandle = (value: string[]) => {
 /**
  * 删除已选菜品
  */
-const delCheck = (name: string) => {
-  const index = checkedList.value.findIndex((it) => it === name)
-  const indexAll = checkedListAll.value.findIndex((it: any) => it.name === name)
+const delCheck = (item: any) => {
+  const itemId = item.id || item.dishId
+  const index = checkedList.value.findIndex((it) => it === itemId)
+  const indexAll = checkedListAll.value.findIndex((it: any) => (it.id || it.dishId) === itemId)
 
   if (index !== -1) {
     checkedList.value.splice(index, 1)

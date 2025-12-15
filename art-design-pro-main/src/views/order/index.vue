@@ -90,6 +90,8 @@ const orderStatics = ref<any>({})
 
 // 搜索状态
 const isSearch = ref(false)
+// 是否启用自动搜索（避免初始化时触发）
+const enableAutoSearch = ref(false)
 
 // 弹窗相关
 const dialogVisible = ref(false)
@@ -103,6 +105,7 @@ const dialogOrderStatus = ref(0)
 const searchForm = ref({
   number: undefined,
   phone: undefined,
+  timeRange: undefined, // 日期范围选择器字段
   beginTime: undefined,
   endTime: undefined,
   orderType: undefined
@@ -111,28 +114,28 @@ const searchForm = ref({
 // 搜索项配置
 const searchItems = computed(() => [
   {
-    prop: 'number',
+    key: 'number',
     label: '订单号',
-    component: 'ElInput',
-    componentProps: {
+    type: 'input',
+    props: {
       placeholder: '请填写订单号',
       clearable: true
     }
   },
   {
-    prop: 'phone',
+    key: 'phone',
     label: '手机号',
-    component: 'ElInput',
-    componentProps: {
+    type: 'input',
+    props: {
       placeholder: '请填写手机号',
       clearable: true
     }
   },
   {
-    prop: 'timeRange',
+    key: 'timeRange',
     label: '下单时间',
-    component: 'ElDatePicker',
-    componentProps: {
+    type: 'daterange',
+    props: {
       type: 'daterange',
       rangeSeparator: '至',
       startPlaceholder: '开始日期',
@@ -143,10 +146,10 @@ const searchItems = computed(() => [
     }
   },
   {
-    prop: 'orderType',
+    key: 'orderType',
     label: '订单类型',
-    component: 'ElSelect',
-    componentProps: {
+    type: 'select',
+    props: {
       placeholder: '请选择订单类型',
       clearable: true,
       options: [
@@ -299,6 +302,7 @@ const {
   loading,
   pagination,
   getData,
+  getDataDebounced,
   searchParams,
   resetSearchParams,
   handleSizeChange,
@@ -321,10 +325,70 @@ const {
   }
 })
 
-// 监听订单状态变化，更新列配置
-watch(orderStatus, () => {
-  columns.value = getColumns(orderStatus.value)
-})
+// 监听订单状态变化，更新列配置和搜索参数
+watch(orderStatus, (newStatus) => {
+  columns.value = getColumns(newStatus)
+  // 同步更新搜索参数中的 status，确保查询使用正确的状态
+  // 注意：这里不触发自动查询，由 handleTabChange 或用户操作触发
+  const paramsRecord = searchParams as Record<string, unknown>
+  if (paramsRecord.status !== newStatus) {
+    paramsRecord.status = newStatus
+  }
+}, { immediate: false })
+
+// 自动搜索处理函数
+const handleAutoSearch = () => {
+  // 如果未启用自动搜索，不执行
+  if (!enableAutoSearch.value) {
+    return
+  }
+  
+  // 从 searchForm 获取表单数据
+  const params: Record<string, any> = { ...searchForm.value }
+  
+  // 检查是否有搜索条件（订单号、手机号或下单时间）
+  const numberValue = params.number?.trim()
+  const phoneValue = params.phone?.trim()
+  const hasTimeRange = params.timeRange && Array.isArray(params.timeRange) && params.timeRange.length === 2
+  
+  // 处理时间范围
+  if (hasTimeRange) {
+    params.beginTime = params.timeRange[0]
+    params.endTime = params.timeRange[1]
+    delete params.timeRange
+  } else {
+    // 如果没有时间范围，清除时间相关参数
+    params.beginTime = undefined
+    params.endTime = undefined
+    delete params.timeRange
+  }
+  
+  // 清除空字符串，避免传递空值
+  if (!numberValue) {
+    params.number = undefined
+  }
+  if (!phoneValue) {
+    params.phone = undefined
+  }
+  
+  // 添加订单状态
+  params.status = orderStatus.value
+  
+  // 更新搜索参数
+  Object.assign(searchParams, params)
+  
+  // 使用防抖搜索，避免频繁请求（即使没有搜索条件也会执行，显示所有数据）
+  getDataDebounced(params)
+}
+
+// 监听搜索表单字段变化，自动触发查询
+watch(
+  () => [searchForm.value.number, searchForm.value.phone, searchForm.value.timeRange],
+  () => {
+    handleAutoSearch()
+  },
+  { deep: true }
+)
 
 /**
  * 获取订单统计
@@ -350,28 +414,47 @@ const handleTabChange = (activeIndex: number) => {
   searchForm.value = {
     number: undefined,
     phone: undefined,
+    timeRange: undefined,
     beginTime: undefined,
     endTime: undefined,
     orderType: undefined
   }
   dialogOrderStatus.value = 0
-  router.push('/order')
+  // 更新路由参数，保持 URL 和状态同步
+  router.push({
+    path: '/order',
+    query: activeIndex === 0 ? {} : { status: activeIndex }
+  })
+  // 更新搜索参数中的 status，然后刷新数据
+  Object.assign(searchParams, { status: activeIndex, page: 1 })
   refreshData()
 }
 
 /**
  * 搜索处理
  */
-const handleSearch = (params: Record<string, any>) => {
+const handleSearch = () => {
   isSearch.value = true
+  // 暂时禁用自动搜索，避免重复触发
+  enableAutoSearch.value = false
+  // 从 searchForm 获取表单数据
+  const params: Record<string, any> = { ...searchForm.value }
   // 处理时间范围
   if (params.timeRange && Array.isArray(params.timeRange)) {
     params.beginTime = params.timeRange[0]
     params.endTime = params.timeRange[1]
     delete params.timeRange
   }
-  Object.assign(searchParams, { ...params, status: orderStatus.value })
-  getData()
+  // 添加订单状态
+  params.status = orderStatus.value
+  // 更新搜索参数
+  Object.assign(searchParams, params)
+  // 调用 getData，它会自动重置到第一页并清空缓存
+  getData(params)
+  // 搜索完成后重新启用自动搜索
+  setTimeout(() => {
+    enableAutoSearch.value = true
+  }, 100)
 }
 
 /**
@@ -380,7 +463,25 @@ const handleSearch = (params: Record<string, any>) => {
 const handleReset = () => {
   isSearch.value = false
   resetSearchParams()
-  Object.assign(searchParams, { status: orderStatus.value })
+  // 重置后，回到全部订单状态（status=0）
+  orderStatus.value = 0
+  defaultActivity.value = 0
+  // 清空搜索表单，包括日期范围
+  searchForm.value = {
+    number: undefined,
+    phone: undefined,
+    timeRange: undefined,
+    beginTime: undefined,
+    endTime: undefined,
+    orderType: undefined
+  }
+  Object.assign(searchParams, { 
+    status: 0,
+    page: 1,
+    pageSize: 10
+  })
+  // 更新路由，移除 status 参数
+  router.push({ path: '/order', query: {} })
   getData()
 }
 
@@ -392,7 +493,7 @@ const goDetail = async (row: any) => {
     const res = await queryOrderDetailById({ orderId: row.id })
     currentOrderData.value = res
     dialogOrderStatus.value = row.status
-    orderId.value = row.id
+    orderId.value = String(row.id)
     dialogVisible.value = true
   } catch (err: any) {
     ElMessage.error('获取订单详情失败：' + err.message)
@@ -492,6 +593,8 @@ onMounted(() => {
   if (route.query.orderId && route.query.orderId !== 'undefined') {
     goDetail({ id: route.query.orderId, status: Number(route.query.status) || 2 })
   }
+  // 启用自动搜索功能
+  enableAutoSearch.value = true
 })
 </script>
 

@@ -62,7 +62,7 @@
     <select id="pageHistoryOrders" resultType="com.sky.entity.Orders">
         select * from orders
         <where>
-            <if test="status != null">
+            <if test="status != null and status != 0">
                 and status = #{status}
             </if>
             <if test="phone != null">
@@ -76,9 +76,6 @@
             </if>
             <if test="endTime != null">
                 AND order_time &lt;= #{endTime}
-            </if>
-            <if test="status != null">
-                and status = #{status}
             </if>
         </where>
         order by order_time desc

@@ -116,6 +116,7 @@ export const defaultResponseAdapter = <T>(response: unknown): ApiResponse<T> => 
   const recordFields = tableConfig.recordFields
 
   if (!response) {
+    console.warn('[tableUtils] 响应为空')
     return { records: [], total: 0 }
   }
 
@@ -138,10 +139,26 @@ export const defaultResponseAdapter = <T>(response: unknown): ApiResponse<T> => 
   let total = 0
   let pagination: Pick<ApiResponse<unknown>, 'current' | 'size'> | undefined
 
+  // 添加调试日志
+  if (process.env.NODE_ENV === 'development') {
+    console.log('[tableUtils] 原始响应数据:', JSON.stringify(res, null, 2))
+    console.log('[tableUtils] 原始响应数据类型:', typeof res, '是否为对象:', typeof res === 'object', '是否为数组:', Array.isArray(res))
+    if (typeof res === 'object' && res !== null) {
+      console.log('[tableUtils] 响应数据包含的键:', Object.keys(res))
+      console.log('[tableUtils] records 字段:', res.records, '类型:', typeof res.records, '是否为数组:', Array.isArray(res.records))
+      console.log('[tableUtils] total 字段:', res.total, '类型:', typeof res.total)
+    }
+  }
+
   // 处理标准格式或直接列表
   records = extractRecords(res, recordFields)
   total = extractTotal(res, records, tableConfig.totalFields)
   pagination = extractPagination(res)
+
+  // 添加调试日志
+  if (process.env.NODE_ENV === 'development') {
+    console.log('[tableUtils] 提取后的数据:', { records: records.length, total, pagination })
+  }
 
   // 如果没有找到，检查嵌套data
   if (records.length === 0 && 'data' in res && typeof res.data === 'object') {

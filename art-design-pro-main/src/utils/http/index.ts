@@ -93,7 +93,16 @@ axiosInstance.interceptors.request.use(
 
     // GET请求特殊处理：手动序列化参数到URL（适配旧前端逻辑）
     if (request.method?.toUpperCase() === 'GET' && request.params) {
-      request.url = serializeGetParams(request.url || '', request.params)
+      const originalUrl = request.url || ''
+      request.url = serializeGetParams(originalUrl, request.params)
+      // 添加调试日志
+      if (process.env.NODE_ENV === 'development') {
+        console.log('[HTTP] GET 请求:', {
+          originalUrl,
+          params: request.params,
+          finalUrl: request.url
+        })
+      }
       request.params = {}
     }
 
@@ -113,34 +122,141 @@ axiosInstance.interceptors.request.use(
 
 /** 响应拦截器 */
 axiosInstance.interceptors.response.use(
-  (response: AxiosResponse<BaseResponse>) => {
-    const { code, msg } = response.data
+  async (response: AxiosResponse<BaseResponse | Blob>) => {
+    // 处理 Blob 响应（如文件下载、导出等）
+    if (response.config.responseType === 'blob' || response.data instanceof Blob) {
+      const blob = response.data as Blob
+      const contentType = response.headers['content-type'] || response.headers['Content-Type'] || ''
+      
+      // 检查是否是错误响应（Spring 错误页面通常是 text/xml 或 text/html）
+      if (contentType.includes('text/xml') || contentType.includes('text/html') || contentType.includes('application/json')) {
+        // 尝试读取 Blob 内容，检查是否是错误响应
+        try {
+          const text = await blob.text()
+          // 如果是 JSON 格式的错误响应，解析并抛出错误
+          if (contentType.includes('application/json') || text.trim().startsWith('{')) {
+            try {
+              const errorData = JSON.parse(text)
+              const errorCode = errorData.code ?? response.status ?? ApiStatus.error
+              const errorMessage = errorData.msg || errorData.message || $t('httpMsg.requestFailed')
+              throw createHttpError(errorMessage, errorCode, {
+                url: response.config?.url,
+                method: response.config?.method?.toUpperCase(),
+                data: errorData
+              })
+            } catch (e) {
+              // JSON 解析失败，继续处理
+            }
+          }
+          // 如果是 XML 或 HTML 错误页面，检查状态码
+          if (response.status && response.status >= 400) {
+            const errorCode = response.status
+            const errorMessage = $t('httpMsg.requestFailed')
+            throw createHttpError(errorMessage, errorCode, {
+              url: response.config?.url,
+              method: response.config?.method?.toUpperCase(),
+              data: { contentType, size: blob.size }
+            })
+          }
+        } catch (error) {
+          // 如果已经是 HttpError，直接抛出
+          if (error instanceof HttpError) {
+            throw error
+          }
+          // 其他错误，继续处理 Blob
+        }
+      }
+      // 正常返回 Blob 响应
+      return response
+    }
+
+    // 处理 JSON 响应
+    const responseData = response.data as BaseResponse
+    const { code, msg, data } = responseData
+    // 添加调试日志
+    if (process.env.NODE_ENV === 'development') {
+      let dataPreview: any = null
+      if (data) {
+        if (Array.isArray(data)) {
+          dataPreview = `Array(${data.length})`
+        } else if (typeof data === 'object') {
+          dataPreview = JSON.stringify(data).substring(0, 500)
+        } else if (typeof data === 'string') {
+          dataPreview = data.length > 500 ? data.substring(0, 500) + '...' : data
+        } else {
+          dataPreview = data
+        }
+      }
+      console.log('[HTTP] 响应数据:', {
+        url: response.config.url,
+        code,
+        msg,
+        data: dataPreview,
+        dataType: typeof data,
+        isString: typeof data === 'string',
+        isObject: typeof data === 'object' && data !== null,
+        isArray: Array.isArray(data)
+      })
+    }
     // 适配旧后端：code=1表示成功
     if (code === SUCCESS_CODE) return response
     // 处理401未授权
-    if (code === ApiStatus.unauthorized || response.data.status === 401) {
-      handleUnauthorizedError(msg)
+    if (code === ApiStatus.unauthorized || (responseData as any).status === 401) {
+      handleUnauthorizedError(
+        msg,
+        response.config?.url,
+        response.config?.method?.toUpperCase()
+      )
     }
     // 其他错误码抛出错误
-    throw createHttpError(msg || $t('httpMsg.requestFailed'), code)
+    const errorCode = code ?? ApiStatus.error
+    const errorMessage = msg || $t('httpMsg.requestFailed')
+    throw createHttpError(errorMessage, errorCode, {
+      url: response.config?.url,
+      method: response.config?.method?.toUpperCase(),
+      data: responseData
+    })
   },
   (error) => {
     // HTTP状态码401处理
     if (error.response?.status === ApiStatus.unauthorized) {
-      handleUnauthorizedError()
+      handleUnauthorizedError(
+        undefined,
+        error.config?.url,
+        error.config?.method?.toUpperCase()
+      )
     }
     return Promise.reject(handleError(error))
   }
 )
 
 /** 统一创建HttpError */
-function createHttpError(message: string, code: number) {
-  return new HttpError(message, code)
+function createHttpError(
+  message: string,
+  code: number | undefined,
+  options?: {
+    url?: string
+    method?: string
+    data?: unknown
+  }
+) {
+  return new HttpError(message, code ?? ApiStatus.error, {
+    url: options?.url,
+    method: options?.method,
+    data: options?.data
+  })
 }
 
 /** 处理401错误（带防抖） */
-function handleUnauthorizedError(message?: string): never {
-  const error = createHttpError(message || $t('httpMsg.unauthorized'), ApiStatus.unauthorized)
+function handleUnauthorizedError(message?: string, url?: string, method?: string): never {
+  const error = createHttpError(
+    message || $t('httpMsg.unauthorized'),
+    ApiStatus.unauthorized,
+    {
+      url,
+      method
+    }
+  )
 
   if (!isUnauthorizedErrorShown) {
     isUnauthorizedErrorShown = true
@@ -214,11 +330,16 @@ async function request<T = any>(config: ExtendedAxiosRequestConfig): Promise<T> 
   }
 
   try {
-    const res = await axiosInstance.request<BaseResponse<T>>(config)
+    const res = await axiosInstance.request<BaseResponse<T> | Blob>(config)
+
+    // 处理 Blob 响应（如文件下载、导出等）
+    if (config.responseType === 'blob' || res.data instanceof Blob) {
+      return res.data as T
+    }
 
     // 适配旧后端响应格式：直接返回response.data（包含code、msg、data）
     // 如果只需要data，在API调用层处理
-    const responseData = res.data
+    const responseData = res.data as BaseResponse<T>
 
     // 显示成功消息
     if (config.showSuccessMessage && responseData.msg) {
@@ -226,7 +347,46 @@ async function request<T = any>(config: ExtendedAxiosRequestConfig): Promise<T> 
     }
 
     // 返回data字段（保持与旧前端一致）
-    return responseData.data as T
+    let result = responseData.data as T
+    
+    // 如果 data 是字符串，尝试解析为 JSON
+    if (typeof result === 'string') {
+      try {
+        const parsed = JSON.parse(result)
+        if (process.env.NODE_ENV === 'development') {
+          const originalStr = result.length > 100 ? result.substring(0, 100) + '...' : result
+          const parsedStr = typeof parsed === 'object' && parsed !== null 
+            ? (JSON.stringify(parsed).length > 200 ? JSON.stringify(parsed).substring(0, 200) + '...' : JSON.stringify(parsed))
+            : String(parsed)
+          console.log('[HTTP] 解析 JSON 字符串成功:', {
+            original: originalStr,
+            parsed: parsedStr
+          })
+        }
+        result = parsed as T
+      } catch (e) {
+        // 如果解析失败，返回原始字符串
+        const errorMsg = typeof result === 'string' && result.length > 100 
+          ? result.substring(0, 100) + '...' 
+          : String(result)
+        console.warn('[HTTP] 无法解析 data 字段为 JSON:', e, '原始数据:', errorMsg)
+      }
+    }
+    
+    // 添加调试日志
+    if (process.env.NODE_ENV === 'development') {
+      const preview = typeof result === 'object' && result !== null
+        ? (JSON.stringify(result).length > 200 ? JSON.stringify(result).substring(0, 200) + '...' : JSON.stringify(result))
+        : String(result)
+      console.log('[HTTP] 最终返回的数据:', {
+        type: typeof result,
+        isArray: Array.isArray(result),
+        keys: typeof result === 'object' && result !== null ? Object.keys(result) : null,
+        preview
+      })
+    }
+    
+    return result
   } catch (error) {
     if (error instanceof HttpError && error.code !== ApiStatus.unauthorized) {
       const showMsg = config.showErrorMessage !== false

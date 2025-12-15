@@ -75,7 +75,7 @@
           </div>
           <div class="dish-all-amount">
             <label>菜品小计</label>
-            <span>￥{{ ((orderData.amount - 6 - (orderData.packAmount || 0)) * 100) / 100 }}</span>
+              <span>￥{{ ((orderData.amount - 6 - (orderData.packAmount || 2)) * 100) / 100 }}</span>
           </div>
         </div>
       </div>
@@ -94,7 +94,7 @@
             </div>
             <div class="package-amount">
               <span class="amount-name">打包费：</span>
-              <span class="amount-price">￥{{ orderData.packAmount ? ((orderData.packAmount * 100) / 100).toFixed(2) : '' }}</span>
+              <span class="amount-price">￥{{ (orderData.packAmount || 2).toFixed(2) }}</span>
             </div>
             <div class="all-amount">
               <span class="amount-name">合计：</span>
