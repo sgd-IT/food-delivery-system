@@ -69,6 +69,23 @@ public class DishServiceImpl implements DishService {
 
         Page<DishVO> page = dishMapper.pageQuery(dishPageQueryDTO);
 
+        //处理描述字段：过滤掉问号（可能是编码问题导致的）
+        if (page != null && page.getResult() != null) {
+            for (DishVO dishVO : page.getResult()) {
+                String description = dishVO.getDescription();
+                if (description != null && !description.isEmpty()) {
+                    // 如果描述全是问号（包括中文和英文问号），清空它
+                    if (description.matches("^[?？]+$")) {
+                        dishVO.setDescription("");
+                    } else {
+                        // 移除描述中的问号字符
+                        String cleaned = description.replace("?", "").replace("？", "");
+                        dishVO.setDescription(cleaned.trim().isEmpty() ? "" : cleaned);
+                    }
+                }
+            }
+        }
+
         return new PageResult(page.getTotal(), page.getResult());
     }
 
@@ -119,6 +136,46 @@ public class DishServiceImpl implements DishService {
         //封装到VO
         DishVO dishVO = new DishVO();
         BeanUtils.copyProperties(dish, dishVO);//将dish中的属性值拷贝到dishVO中，包括菜品的id和名称
+        
+        //处理描述字段：过滤掉问号（可能是编码问题导致的）
+        String description = dish.getDescription();
+        if (description != null && !description.isEmpty()) {
+            // 如果描述全是问号（包括中文和英文问号），清空它
+            if (description.matches("^[?？]+$")) {
+                dishVO.setDescription("");
+            } else {
+                // 移除描述中的问号字符
+                String cleaned = description.replace("?", "").replace("？", "");
+                dishVO.setDescription(cleaned.trim().isEmpty() ? "" : cleaned);
+            }
+        }
+        
+        //处理口味数据：过滤掉问号（可能是编码问题导致的）
+        if (flavors != null && flavors.size() > 0) {
+            flavors.forEach(flavor -> {
+                // 处理口味名称
+                String flavorName = flavor.getName();
+                if (flavorName != null && !flavorName.isEmpty()) {
+                    if (flavorName.matches("^[?？]+$")) {
+                        flavor.setName("");
+                    } else {
+                        String cleanedName = flavorName.replace("?", "").replace("？", "");
+                        flavor.setName(cleanedName.trim().isEmpty() ? "" : cleanedName);
+                    }
+                }
+                // 处理口味值
+                String flavorValue = flavor.getValue();
+                if (flavorValue != null && !flavorValue.isEmpty()) {
+                    if (flavorValue.matches("^[?？]+$") || flavorValue.contains("\"?\"") || flavorValue.contains("\"？\"")) {
+                        flavor.setValue("[]");
+                    } else {
+                        String cleanedValue = flavorValue.replace("\"?\"", "\"\"").replace("\"？\"", "\"\"");
+                        flavor.setValue(cleanedValue);
+                    }
+                }
+            });
+        }
+        
         dishVO.setFlavors(flavors);
 
         return dishVO;
@@ -174,8 +231,47 @@ public class DishServiceImpl implements DishService {
             DishVO dishVO = new DishVO();
             BeanUtils.copyProperties(d,dishVO);
 
+            //处理描述字段：过滤掉问号（可能是编码问题导致的）
+            String description = d.getDescription();
+            if (description != null && !description.isEmpty()) {
+                // 如果描述全是问号（包括中文和英文问号），清空它
+                if (description.matches("^[?？]+$")) {
+                    dishVO.setDescription("");
+                } else {
+                    // 移除描述中的问号字符
+                    String cleaned = description.replace("?", "").replace("？", "");
+                    dishVO.setDescription(cleaned.trim().isEmpty() ? "" : cleaned);
+                }
+            }
+
             //根据菜品id查询对应的口味
             List<DishFlavor> flavors = dishFlavorMapper.getByDishId(d.getId());
+
+            //处理口味数据：过滤掉问号（可能是编码问题导致的）
+            if (flavors != null && flavors.size() > 0) {
+                flavors.forEach(flavor -> {
+                    // 处理口味名称
+                    String flavorName = flavor.getName();
+                    if (flavorName != null && !flavorName.isEmpty()) {
+                        if (flavorName.matches("^[?？]+$")) {
+                            flavor.setName("");
+                        } else {
+                            String cleanedName = flavorName.replace("?", "").replace("？", "");
+                            flavor.setName(cleanedName.trim().isEmpty() ? "" : cleanedName);
+                        }
+                    }
+                    // 处理口味值
+                    String flavorValue = flavor.getValue();
+                    if (flavorValue != null && !flavorValue.isEmpty()) {
+                        if (flavorValue.matches("^[?？]+$") || flavorValue.contains("\"?\"") || flavorValue.contains("\"？\"")) {
+                            flavor.setValue("[]");
+                        } else {
+                            String cleanedValue = flavorValue.replace("\"?\"", "\"\"").replace("\"？\"", "\"\"");
+                            flavor.setValue(cleanedValue);
+                        }
+                    }
+                });
+            }
 
             dishVO.setFlavors(flavors);
             dishVOList.add(dishVO);

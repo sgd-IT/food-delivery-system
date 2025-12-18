@@ -70,12 +70,25 @@ public class OrderServiceImpl implements OrderService {
     @Transactional
     public OrderSubmitVO submit(OrdersSubmitDTO ordersSubmitDTO) {
         //处理各种业务异常（地址簿不存在，用户不存在，购物车数据为空）
-        //查询地址簿是否存在
-        AddressBook addressBookMapperId = addressBookMapper.getById(ordersSubmitDTO.getAddressBookId());
-        if (addressBookMapperId == null) {
-            //地址簿不存在
-            throw new AddressBookBusinessException(MessageConstant.ADDRESS_BOOK_IS_NULL);
+        
+        // 设置订单类型
+        Integer orderType = ordersSubmitDTO.getOrderType();
+        if (orderType == null) {
+            // 默认为外卖配送
+            orderType = 2;
         }
+        
+        // 根据订单类型决定是否需要校验地址簿
+        AddressBook addressBookMapperId = null;
+        if (orderType == 2) {
+            // 外卖配送订单需要校验地址簿
+            addressBookMapperId = addressBookMapper.getById(ordersSubmitDTO.getAddressBookId());
+            if (addressBookMapperId == null) {
+                //地址簿不存在
+                throw new AddressBookBusinessException(MessageConstant.ADDRESS_BOOK_IS_NULL);
+            }
+        }
+        
         //查询购物车数据是否存在
         ShoppingCart cart = new ShoppingCart();
         cart.setUserId(BaseContext.getCurrentId());
@@ -93,20 +106,10 @@ public class OrderServiceImpl implements OrderService {
             orders.setStatus(Orders.PENDING_PAYMENT);
             orders.setNumber(String.valueOf(System.currentTimeMillis()));
             orders.setUserId(BaseContext.getCurrentId());
+            orders.setOrderType(orderType);
             
-            // 设置订单类型
-            if (ordersSubmitDTO.getOrderType() == null) {
-                // 默认为外卖配送
-                orders.setOrderType(2);
-            } else {
-                orders.setOrderType(ordersSubmitDTO.getOrderType());
-            }
-            
-            // 固定打包费为2元
-            orders.setPackAmount(2);
-
             // 根据订单类型处理地址信息
-            if (orders.getOrderType() == 1) {
+            if (orderType == 1) {
                 // 到店自取订单不需要配送地址信息
                 orders.setAddress(null);
                 orders.setConsignee(null);
