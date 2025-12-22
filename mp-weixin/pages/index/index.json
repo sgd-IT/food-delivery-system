@@ -1,0 +1,9 @@
+{
+  "navigationStyle": "custom",
+  "navigationBarTitleText": "云味道",
+  "usingComponents": {
+    "nav-bar": "/pages/common/Navbar/navbar",
+    "phone": "/components/uni-phone/index",
+    "uni-icons": "/components/uni-icons/uni-icons"
+  }
+}

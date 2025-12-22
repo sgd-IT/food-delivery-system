@@ -1,0 +1,841 @@
+@import '../../common/variables.wxss';
+
+.home_content.data-v-57280228 {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding-top: 160rpx;
+  position: relative;
+}
+
+.home_content .restaurant_info_box.data-v-57280228 {
+  position: relative;
+  color: var(--text-primary);
+  width: 100%;
+}
+
+.home_content .restaurant_info_box .restaurant_info.data-v-57280228 {
+  position: absolute;
+  z-index: 10;
+  top: 10rpx;
+  left: 30rpx;
+  display: flex;
+  flex-direction: column;
+  width: calc(100% - 60rpx);
+  background: var(--bg-white);
+  box-shadow: var(--shadow-card);
+  border-radius: var(--radius-sm);
+  padding: 14rpx 18rpx 22rpx 16rpx;
+  box-sizing: border-box;
+}
+
+.home_content .restaurant_info_box .restaurant_info .info_top.data-v-57280228 {
+  flex: 1;
+  display: flex;
+  padding-bottom: 10rpx;
+  border-bottom: 1px dashed var(--border-light);
+}
+.home_content .restaurant_info_box .restaurant_info .info_top .info_top_left.data-v-57280228 {
+  margin-right: 20rpx;
+  padding-top: 10rpx;
+  box-sizing: border-box;
+}
+.home_content .restaurant_info_box .restaurant_info .info_top .info_top_left image.data-v-57280228 {
+  width: 86rpx;
+  height: 86rpx;
+}
+.home_content .restaurant_info_box .restaurant_info .info_top .info_top_right.data-v-57280228 {
+  flex: 1;
+}
+.home_content .restaurant_info_box .restaurant_info .info_top .info_top_right .right_title.data-v-57280228 {
+  display: flex;
+  align-items: center;
+}
+.home_content .restaurant_info_box .restaurant_info .info_top .info_top_right .right_title text.data-v-57280228 {
+  font-size: var(--font-xl);
+  font-family: PingFangSC, PingFangSC-Medium;
+  font-weight: var(--font-medium);
+  text-align: left;
+  color: var(--text-primary);
+  line-height: 50rpx;
+}
+.home_content .restaurant_info_box .restaurant_info .info_top .info_top_right .right_details.data-v-57280228 {
+  width: 100%;
+  display: flex;
+}
+.home_content .restaurant_info_box .restaurant_info .info_top .info_top_right .right_details .details_flex.data-v-57280228 {
+  white-space: nowrap;
+}
+.home_content .restaurant_info_box .restaurant_info .info_top .info_top_right .right_details .details_flex .top_icon.data-v-57280228 {
+  vertical-align: middle;
+  margin-bottom: 4rpx;
+  margin-right: 6rpx;
+}
+.home_content .restaurant_info_box .restaurant_info .info_top .info_top_right .right_details .details_flex .icon_text.data-v-57280228 {
+  font-size: var(--font-sm);
+  font-family: PingFangSC, PingFangSC-Regular;
+  font-weight: var(--font-normal);
+  text-align: center;
+  color: var(--text-secondary);
+  line-height: 36rpx;
+  padding-right: var(--spacing-lg);
+}
+.home_content .restaurant_info_box .restaurant_info .info_top .info_top_right .right_details .test.data-v-57280228 {
+  flex: 1;
+}
+.home_content .restaurant_info_box .restaurant_info .info_top .info_top_right .right_details .vertical-line.data-v-57280228 {
+  display: inline-block;
+  width: 1px;
+  height: 20rpx;
+  line-height: 20rpx;
+  margin: 16rpx 10rpx;
+  background-color: #ccc;
+}
+.home_content .restaurant_info_box .restaurant_info .info_bottom.data-v-57280228 {
+  margin-top: var(--spacing-md);
+  display: flex;
+  font-size: var(--font-sm);
+  font-family: PingFangSC, PingFangSC-Regular;
+  font-weight: var(--font-normal);
+  text-align: left;
+  color: var(--text-disabled);
+  line-height: 34rpx;
+  padding: 0 4rpx;
+}
+.home_content .restaurant_info_box .restaurant_info .info_bottom > view.data-v-57280228:first-child {
+  flex: 1;
+}
+.home_content .restaurant_info_box .restaurant_info .info_bottom .word.data-v-57280228 {
+  display: block;
+  padding-bottom: var(--spacing-lg);
+}
+.home_content .restaurant_info_box .restaurant_info .info_bottom .address.data-v-57280228 {
+  display: flex;
+  align-items: center;
+  text-align: center;
+}
+.home_content .restaurant_info_box .restaurant_info .info_bottom .address icon.data-v-57280228 {
+  display: inline-block;
+}
+.home_content .restaurant_info_box .restaurant_info .info_bottom .phone.data-v-57280228 {
+  padding: 10rpx 20rpx 10rpx 40rpx;
+  margin-left: 12rpx;
+  margin-top: 12rpx;
+  border-left: 1px solid rgba(219, 219, 219, 0.45);
+}
+.home_content .restaurant_info_box .restaurant_info .info_bottom .phone .phoneIcon.data-v-57280228 {
+  vertical-align: -webkit-baseline-middle;
+}
+.home_content .restaurant_menu_list.data-v-57280228 {
+  display: flex;
+  width: 100%;
+  height: calc(100vh - 260rpx);
+  margin-top: 135rpx;
+}
+.home_content .restaurant_menu_list .type_list.data-v-57280228 {
+  display: flex;
+  overflow: hidden;
+  background-color: var(--bg-gray);
+  width: 168rpx;
+  padding-top: 140rpx;
+  box-sizing: border-box;
+  padding-bottom: 60rpx;
+  position: relative;
+  font-size: var(--font-md);
+}
+
+.home_content .restaurant_menu_list .type_list .type_item.data-v-57280228 {
+  line-height: 100rpx;
+  text-align: left;
+  padding-left: var(--spacing-lg);
+  padding-right: 26rpx;
+  font-family: PingFangSC, PingFangSC-Regular;
+  font-weight: var(--font-normal);
+  color: var(--text-tertiary);
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+.home_content .restaurant_menu_list .type_list .type_item .item.data-v-57280228 {
+  line-height: 100rpx;
+}
+.home_content .restaurant_menu_list .type_list .type_item .allLine.data-v-57280228 {
+  padding: 16rpx 0;
+  line-height: 34rpx;
+}
+.home_content .restaurant_menu_list .type_list .active.data-v-57280228 {
+  color: var(--text-secondary);
+  background-color: var(--bg-white);
+  position: relative;
+  font-family: PingFangSC, PingFangSC-Medium;
+  font-weight: var(--font-medium);
+}
+
+.home_content .restaurant_menu_list .type_list .active.data-v-57280228::after {
+  background-color: var(--bg-gray);
+  border-radius: 0 15rpx 0 0;
+}
+.home_content .restaurant_menu_list .type_list .seize_seat.data-v-57280228 {
+  width: 100%;
+  height: 160rpx;
+}
+.home_content .restaurant_menu_list .vegetable_order_list.data-v-57280228 {
+  background-color: #fff;
+  padding-top: 140rpx;
+  box-sizing: border-box;
+  height: calc(100% - 0rpx);
+  flex: 1;
+  position: relative;
+}
+.home_content .restaurant_menu_list .vegetable_order_list .type_item.data-v-57280228 {
+  display: flex;
+  padding-top: 20rpx;
+}
+.home_content .restaurant_menu_list .vegetable_order_list .type_item .dish_img.data-v-57280228 {
+  width: 172rpx;
+  margin: 0 30rpx;
+}
+.home_content .restaurant_menu_list .vegetable_order_list .type_item .dish_img .dish_img_url.data-v-57280228 {
+  display: block;
+  width: 172rpx;
+  height: 172rpx;
+  border-radius: 8rpx;
+}
+.home_content .restaurant_menu_list .vegetable_order_list .type_item .dish_info.data-v-57280228 {
+  position: relative;
+  flex: 1;
+}
+.home_content .restaurant_menu_list .vegetable_order_list .type_item .dish_info .dish_name.data-v-57280228 {
+  font-size: var(--font-lg);
+  font-family: PingFangSC, PingFangSC-Semibold;
+  font-weight: var(--font-bold);
+  color: var(--text-secondary);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  width: calc(100vw - 452rpx);
+}
+
+.home_content .restaurant_menu_list .vegetable_order_list .type_item .dish_info .dish_label.data-v-57280228,
+.home_content .restaurant_menu_list .vegetable_order_list .type_item .dish_info .dish_num.data-v-57280228 {
+  font-size: 22rpx;
+  line-height: 40rpx;
+  font-family: PingFangSC, PingFangSC-Regular;
+  font-weight: var(--font-normal);
+  color: var(--text-tertiary);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  width: calc(100vw - 452rpx);
+}
+
+.home_content .restaurant_menu_list .vegetable_order_list .type_item .dish_info .dish_price.data-v-57280228 {
+  height: 72rpx;
+  line-height: 72rpx;
+  font-size: var(--font-xl);
+  color: var(--primary-color);
+  font-family: DIN, DIN-Medium;
+  font-weight: var(--font-medium);
+  bottom: 0;
+  letter-spacing: -0.8px;
+}
+
+.home_content .restaurant_menu_list .vegetable_order_list .type_item .dish_info .dish_price .ico.data-v-57280228 {
+  font-size: var(--font-sm);
+}
+.home_content .restaurant_menu_list .vegetable_order_list .type_item .dish_info .dish_active.data-v-57280228 {
+  position: absolute;
+  right: 20rpx;
+  bottom: 0rpx;
+  display: flex;
+}
+.home_content .restaurant_menu_list .vegetable_order_list .type_item .dish_info .dish_active .dish_add.data-v-57280228,
+.home_content .restaurant_menu_list .vegetable_order_list .type_item .dish_info .dish_active .dish_red.data-v-57280228 {
+  display: block;
+  width: 72rpx;
+  height: 72rpx;
+}
+.home_content .restaurant_menu_list .vegetable_order_list .type_item .dish_info .dish_active .dish_number.data-v-57280228 {
+  padding: 0 10rpx;
+  line-height: 72rpx;
+  font-size: 30rpx;
+  font-family: PingFangSC, PingFangSC-Medium;
+  font-weight: 500;
+}
+.home_content .restaurant_menu_list .vegetable_order_list .type_item .dish_info .dish_active_btn.data-v-57280228 {
+  position: absolute;
+  right: 20rpx;
+  bottom: 15rpx;
+  display: flex;
+}
+.home_content .restaurant_menu_list .vegetable_order_list .type_item .dish_info .dish_active_btn .check_but.data-v-57280228 {
+  width: 128rpx;
+  height: 48rpx;
+  line-height: 48rpx;
+  text-align: center;
+  opacity: 1;
+  background: var(--primary-color);
+  border-radius: var(--radius-2xl);
+  font-size: 12px;
+  font-family: PingFangSC, PingFangSC-Medium;
+  font-weight: var(--font-medium);
+  color: var(--text-white);
+}
+.home_content .restaurant_menu_list .vegetable_order_list .seize_seat.data-v-57280228 {
+  width: 100%;
+  height: 136rpx;
+}
+.home_content .restaurant_menu_list .no_dish.data-v-57280228 {
+  flex: 1;
+  background-color: var(--bg-white);
+  color: var(--text-disabled);
+  font-family: PingFangSC, PingFangSC-Regular;
+  font-weight: var(--font-normal);
+  font-size: var(--font-md);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.home_content .footer_order_buttom.data-v-57280228 {
+  position: fixed;
+  display: flex;
+  bottom: 48rpx;
+  width: calc(100% - 60rpx);
+  height: 88rpx;
+  margin: 0 auto;
+  background: rgba(0, 0, 0, 0.9);
+  border-radius: var(--radius-full);
+  box-shadow: var(--shadow-lg);
+  z-index: 99;
+  padding: 0rpx 10rpx;
+  box-sizing: border-box;
+}
+.home_content .footer_order_buttom .order_number.data-v-57280228 {
+  position: relative;
+  width: 120rpx;
+}
+.home_content .footer_order_buttom .order_number .order_number_icon.data-v-57280228 {
+  position: absolute;
+  display: block;
+  width: 120rpx;
+  height: 118rpx;
+  left: 12rpx;
+  bottom: 0px;
+}
+.home_content .footer_order_buttom .order_number .order_dish_num.data-v-57280228 {
+  position: absolute;
+  display: inline-block;
+  z-index: 9;
+  min-width: 12rpx;
+  height: 36rpx;
+  line-height: 36rpx;
+  padding: 0 var(--spacing-sm);
+  left: 92rpx;
+  font-size: var(--font-sm);
+  top: -8rpx;
+  border-radius: var(--radius-lg);
+  background-color: var(--primary-color);
+  color: var(--text-white);
+  font-weight: var(--font-medium);
+}
+
+.home_content .footer_order_buttom .order_price.data-v-57280228 {
+  flex: 1;
+  text-align: left;
+  color: var(--text-white);
+  line-height: 88rpx;
+  padding-left: 34rpx;
+  box-sizing: border-box;
+  font-size: var(--font-xl);
+  font-family: DIN, DIN-Medium;
+  font-weight: var(--font-medium);
+}
+
+.home_content .footer_order_buttom .order_price .ico.data-v-57280228 {
+  font-size: var(--font-sm);
+}
+
+.home_content .footer_order_buttom .order_but.data-v-57280228 {
+  background-color: #d8d8d8;
+  width: 204rpx;
+  height: 72rpx;
+  line-height: 72rpx;
+  border-radius: 72rpx;
+  color: var(--text-white);
+  text-align: center;
+  margin-top: var(--spacing-xs);
+}
+
+.home_content .orderCar.data-v-57280228 {
+  flex: 1;
+  display: flex;
+}
+
+.home_content .order_form .order_but.data-v-57280228 {
+  font-family: PingFangSC, PingFangSC-Medium;
+  font-weight: var(--font-medium);
+  background: var(--primary-color);
+  color: var(--text-white);
+}
+.home_content .pop_mask.data-v-57280228 {
+  position: fixed;
+  width: 100%;
+  height: 100vh;
+  top: 0;
+  left: 0;
+  z-index: 9;
+  background-color: rgba(0, 0, 0, 0.4);
+}
+.home_content .pop_mask .pop.data-v-57280228 {
+  width: 60%;
+  position: relative;
+  top: 40%;
+  left: 50%;
+  -webkit-transform: translateX(-50%) translateY(-50%);
+          transform: translateX(-50%) translateY(-50%);
+  background: #fff;
+  border-radius: 20rpx;
+}
+.home_content .pop_mask .pop .open_table_cont.data-v-57280228 {
+  padding-top: 60rpx;
+}
+.home_content .pop_mask .pop .open_table_cont .cont_tit.data-v-57280228 {
+  font-size: 36rpx;
+  color: #20232a;
+  text-align: center;
+}
+.home_content .pop_mask .pop .open_table_cont .people_num_act.data-v-57280228 {
+  display: flex;
+  width: 60%;
+  margin: 0 auto;
+}
+.home_content .pop_mask .pop .open_table_cont .people_num_act .red.data-v-57280228,
+.home_content .pop_mask .pop .open_table_cont .people_num_act .add.data-v-57280228 {
+  width: 112rpx;
+  height: 112rpx;
+}
+.home_content .pop_mask .pop .open_table_cont .people_num_act .people_num.data-v-57280228 {
+  line-height: 112rpx;
+  flex: 1;
+  text-align: center;
+  font-size: 30rpx;
+  color: #20232a;
+}
+.home_content .pop_mask .pop .butList.data-v-57280228 {
+  background: #f7f7f7;
+  display: flex;
+  text-align: center;
+  border-radius: var(--radius-lg);
+}
+
+.home_content .pop_mask .pop .butList .define.data-v-57280228 {
+  flex: 1;
+  font-size: var(--font-xl);
+  line-height: 100rpx;
+}
+
+.home_content .pop_mask .pop .butList .cancel.data-v-57280228 {
+  flex: 1;
+  font-size: var(--font-xl);
+  line-height: 100rpx;
+}
+
+.home_content .pop_mask .cart_pop.data-v-57280228 {
+  width: 100%;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  height: 60vh;
+  background-color: var(--bg-white);
+  border-radius: var(--radius-sm) var(--radius-sm) 0 0;
+  padding: var(--spacing-lg) 30rpx 30rpx 30rpx;
+  box-sizing: border-box;
+}
+
+.home_content .pop_mask .cart_pop .top_title.data-v-57280228 {
+  display: flex;
+  justify-content: space-between;
+  border-bottom: solid 1px var(--border-color);
+  padding-bottom: var(--spacing-lg);
+}
+
+.home_content .pop_mask .cart_pop .top_title .tit.data-v-57280228 {
+  font-size: var(--font-2xl);
+  font-weight: var(--font-bold);
+  color: var(--text-primary);
+}
+
+.home_content .pop_mask .cart_pop .top_title .clear.data-v-57280228 {
+  color: var(--text-disabled);
+  font-size: var(--font-base);
+  font-weight: var(--font-normal);
+  display: flex;
+  align-items: center;
+  font-family: PingFangSC, PingFangSC-Regular;
+}
+.home_content .pop_mask .cart_pop .top_title .clear .clear_icon.data-v-57280228 {
+  width: 30rpx;
+  height: 30rpx;
+  margin-right: 8rpx;
+}
+.home_content .pop_mask .cart_pop .top_title .clear .clear-des.data-v-57280228 {
+  height: 56rpx;
+  line-height: 56rpx;
+}
+.home_content .pop_mask .cart_pop .card_order_list.data-v-57280228 {
+  background-color: #fff;
+  padding-top: 40rpx;
+  box-sizing: border-box;
+  height: calc(100% - 0rpx);
+  flex: 1;
+  position: relative;
+}
+.home_content .pop_mask .cart_pop .card_order_list .type_item_cont .user_info.data-v-57280228 {
+  display: flex;
+  margin-bottom: 20rpx;
+}
+.home_content .pop_mask .cart_pop .card_order_list .type_item_cont .user_info .user_avatar.data-v-57280228 {
+  margin-right: 20rpx;
+}
+.home_content .pop_mask .cart_pop .card_order_list .type_item_cont .user_info .user_avatar .user_avatar_icon.data-v-57280228 {
+  width: 42rpx;
+  height: 42rpx;
+  border-radius: 42rpx;
+}
+.home_content .pop_mask .cart_pop .card_order_list .type_item_cont .user_info .user_name.data-v-57280228 {
+  color: #19232b;
+  font-size: 24rpx;
+}
+.home_content .pop_mask .cart_pop .card_order_list .type_item.data-v-57280228 {
+  display: flex;
+  margin-bottom: 40rpx;
+}
+.home_content .pop_mask .cart_pop .card_order_list .type_item .dish_img.data-v-57280228 {
+  width: 128rpx;
+  margin-right: 30rpx;
+}
+.home_content .pop_mask .cart_pop .card_order_list .type_item .dish_img .dish_img_url.data-v-57280228 {
+  display: block;
+  width: 128rpx;
+  height: 128rpx;
+  border-radius: 8rpx;
+}
+.home_content .pop_mask .cart_pop .card_order_list .type_item .dish_info.data-v-57280228 {
+  position: relative;
+  flex: 1;
+  padding-bottom: 120rpx;
+  border-bottom: solid 1px #ebeef5;
+}
+.home_content .pop_mask .cart_pop .card_order_list .type_item .dish_info .dish_name.data-v-57280228 {
+  font-size: 32rpx;
+  line-height: 40rpx;
+  color: #333333;
+  font-family: PingFangSC, PingFangSC-Semibold;
+  font-weight: 600;
+}
+.home_content .pop_mask .cart_pop .card_order_list .type_item .dish_info .dish_price.data-v-57280228 {
+  font-size: 32rpx;
+  color: var(--primary-color);
+  position: absolute;
+  bottom: 24rpx;
+}
+.home_content .pop_mask .cart_pop .card_order_list .type_item .dish_info .dish_price .ico.data-v-57280228 {
+  font-size: 24rpx;
+}
+.home_content .pop_mask .cart_pop .card_order_list .type_item .dish_info .dish_active.data-v-57280228 {
+  position: absolute;
+  right: 20rpx;
+  bottom: 20rpx;
+  display: flex;
+}
+.home_content .pop_mask .cart_pop .card_order_list .type_item .dish_info .dish_active .dish_add.data-v-57280228,
+.home_content .pop_mask .cart_pop .card_order_list .type_item .dish_info .dish_active .dish_red.data-v-57280228 {
+  display: block;
+  width: 72rpx;
+  height: 72rpx;
+}
+.home_content .pop_mask .cart_pop .card_order_list .type_item .dish_info .dish_active .dish_number.data-v-57280228 {
+  padding: 0 10rpx;
+  line-height: 72rpx;
+  font-size: 30rpx;
+  font-family: PingFangSC, PingFangSC-Medium;
+  font-weight: 500;
+}
+.home_content .pop_mask .cart_pop .card_order_list.data-v-57280228::before {
+  content: '';
+  position: absolute;
+  width: 100vw;
+  height: 120rpx;
+  z-index: 99;
+  background: linear-gradient(0deg, white 10%, rgba(255, 255, 255, 0));
+  bottom: 0px;
+  left: 0px;
+}
+.home_content .pop_mask .cart_pop .card_order_list .seize_seat.data-v-57280228 {
+  width: 100%;
+  height: 120rpx;
+}
+.home_content .pop_mask .cart_pop .dish_dishFlavor.data-v-57280228 {
+  position: absolute;
+  left: 0;
+  top: 40rpx;
+}
+.home_content .pop_mask .dish_detail_pop.data-v-57280228 {
+  width: calc(100vw - 160rpx);
+  box-sizing: border-box;
+  position: relative;
+  top: 50%;
+  left: 50%;
+  padding: 40rpx;
+  -webkit-transform: translateX(-50%) translateY(-50%);
+          transform: translateX(-50%) translateY(-50%);
+  background: #fff;
+  border-radius: 20rpx;
+}
+.home_content .pop_mask .dish_detail_pop .div_big_image.data-v-57280228 {
+  width: 100%;
+  height: 320rpx;
+  border-radius: 10rpx;
+}
+.home_content .pop_mask .dish_detail_pop .title.data-v-57280228 {
+  font-size: 40rpx;
+  line-height: 80rpx;
+  text-align: center;
+  font-weight: bold;
+}
+.home_content .pop_mask .dish_detail_pop .dish_items.data-v-57280228 {
+  height: 60vh;
+}
+.home_content .pop_mask .dish_detail_pop .but_item.data-v-57280228 {
+  display: flex;
+  position: relative;
+  flex: 1;
+}
+.home_content .pop_mask .dish_detail_pop .but_item .price.data-v-57280228 {
+  text-align: left;
+  color: var(--primary-color);
+  line-height: 88rpx;
+  box-sizing: border-box;
+  font-size: 48rpx;
+  font-weight: bold;
+}
+.home_content .pop_mask .dish_detail_pop .but_item .price .ico.data-v-57280228 {
+  font-size: 28rpx;
+}
+.home_content .pop_mask .dish_detail_pop .but_item .active.data-v-57280228 {
+  position: absolute;
+  right: 0rpx;
+  bottom: 20rpx;
+  display: flex;
+}
+.home_content .pop_mask .dish_detail_pop .but_item .active .dish_add.data-v-57280228,
+.home_content .pop_mask .dish_detail_pop .but_item .active .dish_red.data-v-57280228 {
+  display: block;
+  width: 72rpx;
+  height: 72rpx;
+}
+.home_content .pop_mask .dish_detail_pop .but_item .active .dish_number.data-v-57280228 {
+  padding: 0 10rpx;
+  line-height: 72rpx;
+  font-size: 30rpx;
+  font-family: PingFangSC, PingFangSC-Medium;
+  font-weight: 500;
+}
+.home_content .pop_mask .dish_detail_pop .but_item .active .dish_card_add.data-v-57280228 {
+  width: 200rpx;
+  line-height: 60rpx;
+  text-align: center;
+  font-weight: 500;
+  font-size: 28rpx;
+  opacity: 1;
+  background: var(--primary-color);
+  color: #fff;
+  border-radius: 30rpx;
+}
+.home_content .pop_mask .more_norm_pop.data-v-57280228 {
+  width: calc(100vw - 160rpx);
+  box-sizing: border-box;
+  position: relative;
+  top: 50%;
+  left: 50%;
+  padding: 40rpx;
+  -webkit-transform: translateX(-50%) translateY(-50%);
+          transform: translateX(-50%) translateY(-50%);
+  background: #fff;
+  border-radius: 20rpx;
+}
+.home_content .pop_mask .more_norm_pop .div_big_image.data-v-57280228 {
+  width: 100%;
+  border-radius: 10rpx;
+}
+.home_content .pop_mask .more_norm_pop .title.data-v-57280228 {
+  font-size: 40rpx;
+  line-height: 80rpx;
+  text-align: center;
+  font-weight: bold;
+}
+.home_content .pop_mask .more_norm_pop .items_cont.data-v-57280228 {
+  display: flex;
+  flex-wrap: wrap;
+  margin-left: -14rpx;
+  max-height: 50vh;
+}
+.home_content .pop_mask .more_norm_pop .items_cont .item_row .flavor_name.data-v-57280228 {
+  height: 40rpx;
+  opacity: 1;
+  font-size: 28rpx;
+  font-family: PingFangSC, PingFangSC-Regular;
+  font-weight: 400;
+  text-align: left;
+  color: #666666;
+  line-height: 40rpx;
+  padding-left: 10rpx;
+  padding-top: 20rpx;
+}
+.home_content .pop_mask .more_norm_pop .items_cont .item_row .flavor_item.data-v-57280228 {
+  display: flex;
+  flex-wrap: wrap;
+}
+.home_content .pop_mask .more_norm_pop .items_cont .item_row .flavor_item .item.data-v-57280228 {
+  border: 1px solid var(--primary-color);
+  border-radius: 12rpx;
+  margin: 20rpx 10rpx;
+  padding: 0 26rpx;
+  height: 60rpx;
+  line-height: 60rpx;
+  font-family: PingFangSC, PingFangSC-Regular;
+  font-weight: 400;
+  color: #333333;
+}
+.home_content .pop_mask .more_norm_pop .items_cont .item_row .flavor_item .act.data-v-57280228 {
+  background: var(--primary-color);
+  color: #fff;
+  border: 1px solid var(--primary-color);
+  font-family: PingFangSC, PingFangSC-Medium;
+  font-weight: 500;
+}
+.home_content .pop_mask .more_norm_pop .but_item.data-v-57280228 {
+  display: flex;
+  position: relative;
+  flex: 1;
+  padding-left: 10rpx;
+  margin: 34rpx 0 -20rpx 0;
+}
+.home_content .pop_mask .more_norm_pop .but_item .price.data-v-57280228 {
+  text-align: left;
+  color: var(--primary-color);
+  line-height: 88rpx;
+  box-sizing: border-box;
+  font-size: 48rpx;
+  font-family: DIN, DIN-Medium;
+  font-weight: 500;
+}
+.home_content .pop_mask .more_norm_pop .but_item .price .ico.data-v-57280228 {
+  font-size: 28rpx;
+}
+.home_content .pop_mask .more_norm_pop .but_item .active.data-v-57280228 {
+  position: absolute;
+  right: 0rpx;
+  bottom: 20rpx;
+  display: flex;
+}
+.home_content .pop_mask .more_norm_pop .but_item .active .dish_add.data-v-57280228,
+.home_content .pop_mask .more_norm_pop .but_item .active .dish_red.data-v-57280228 {
+  display: block;
+  width: 72rpx;
+  height: 72rpx;
+}
+.home_content .pop_mask .more_norm_pop .but_item .active .dish_number.data-v-57280228 {
+  padding: 0 10rpx;
+  line-height: 72rpx;
+  font-size: 30rpx;
+  font-family: PingFangSC, PingFangSC-Medium;
+  font-weight: 500;
+}
+.home_content .pop_mask .more_norm_pop .but_item .active .dish_card_add.data-v-57280228 {
+  width: 200rpx;
+  height: 60rpx;
+  line-height: 60rpx;
+  text-align: center;
+  font-weight: 500;
+  font-size: 28rpx;
+  opacity: 1;
+  background: var(--primary-color);
+  color: #fff;
+  border-radius: 30rpx;
+}
+.home_content .pop_mask .lodding.data-v-57280228 {
+  position: relative;
+  top: 40%;
+  margin: 0 auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.home_content .pop_mask .lodding .lodding_ico.data-v-57280228 {
+  width: 160rpx;
+  height: 160rpx;
+  border-radius: 100%;
+}
+.home_content .pop_mask .close.data-v-57280228 {
+  position: absolute;
+  bottom: -180rpx;
+  left: 50%;
+  -webkit-transform: translateX(-50%);
+          transform: translateX(-50%);
+}
+.home_content .pop_mask .close .close_img.data-v-57280228 {
+  width: 88rpx;
+  height: 88rpx;
+}
+.home_content .mask-box.data-v-57280228 {
+  position: absolute;
+  height: 136rpx;
+  width: 100%;
+  bottom: 0;
+  background-color: var(--bg-gray-light);
+  opacity: var(--opacity-disabled);
+}
+
+.businessStatus.data-v-57280228 {
+  display: inline-block;
+  width: 92rpx;
+  height: 36rpx;
+  background: var(--success-color);
+  border-radius: var(--radius-sm);
+  color: var(--text-white);
+  vertical-align: text-top;
+  margin-left: 10rpx;
+  font-size: var(--font-sm);
+  line-height: 36rpx;
+  text-align: center;
+}
+
+.businessStatus.close.data-v-57280228 {
+  background: var(--text-disabled);
+}
+
+.class-item.data-v-57280228 {
+  margin-bottom: 30rpx;
+  background-color: var(--bg-white);
+  padding: var(--spacing-md);
+  border-radius: var(--radius-sm);
+}
+.class-item.data-v-57280228:last-child {
+  min-height: 100vh;
+}
+
+
+.data-v-57280228 ::-webkit-scrollbar {
+	display: none !important;
+	width: 0 !important;
+	height: 0 !important;
+	-webkit-appearance: none;
+	background: transparent;
+	color: transparent;
+}
+
+

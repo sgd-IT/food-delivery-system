@@ -1,0 +1,106 @@
+/* ==================== 设计变量系统 ==================== */
+/* 对应 art-design-pro-main 的设计规范 */
+
+page {
+  /* ==================== 主色调（更新） ==================== */
+  /* 核心识别色：清新蓝调 */
+  --primary-color: #377dff;
+  /* 辅助浅色：用于渐变或轻量背景 */
+  --primary-light: #6aa2ff;
+  /* 辅助深色：用于点击态 */
+  --primary-dark: #2a60d9;
+  /* 渐变色：保持清新感 */
+  --primary-gradient: linear-gradient(135deg, #377dff 0%, #5d9dff 100%);
+
+  /* ==================== 灰色系统（对应 art-design-pro） ==================== */
+  --gray-100: #f9fafb;
+  --gray-200: #f2f4f5;
+  --gray-300: #e6eaeb;
+  --gray-400: #dbdfe1;
+  --gray-500: #949eb7;
+  --gray-600: #7987a1;
+  --gray-700: #4d5875;
+  --gray-800: #383853;
+  --gray-900: #323251;
+
+  /* ==================== 文字颜色 ==================== */
+  /* 主文本：常规深灰 */
+  --text-primary: #20232a;
+  /* 次要文本：浅灰 */
+  --text-secondary: #606266;
+  --text-tertiary: #909399;
+  --text-disabled: #9b9b9b;
+  --text-placeholder: #bdbdbd;
+  --text-white: #ffffff;
+
+  /* ==================== 背景颜色 ==================== */
+  /* 基础背景：浅灰 */
+  --bg-color: #f5f7fa;
+  --bg-white: #ffffff;
+  --bg-gray: #f3f4f7;
+  --bg-gray-light: #f6f6f6;
+  --bg-hover: #edeff0;
+  --bg-active: #f2f4f5;
+
+  /* ==================== 边框颜色 ==================== */
+  --border-color: #e2e8ee;
+  --border-dashed: #dbdfe9;
+  --border-light: #ebebeb;
+  --border-dark: #efefef;
+  --card-border: rgba(0, 0, 0, 0.08);
+
+  /* ==================== 圆角系统 ==================== */
+  --radius-xs: 4rpx;
+  --radius-sm: 8rpx;
+  --radius-md: 12rpx;
+  --radius-lg: 16rpx;
+  --radius-xl: 20rpx;
+  --radius-2xl: 24rpx;
+  --radius-full: 50rpx;
+
+  /* ==================== 阴影系统 ==================== */
+  /* 轻量质感优化 */
+  --shadow-sm: 0 2rpx 8rpx rgba(0, 0, 0, 0.04);
+  --shadow-md: 0 4rpx 16rpx rgba(0, 0, 0, 0.06);
+  --shadow-lg: 0 6rpx 16rpx rgba(0, 0, 0, 0.12);
+  --shadow-xl: 0 8rpx 24rpx rgba(0, 0, 0, 0.16);
+  --shadow-primary: 0 8rpx 20rpx rgba(55, 125, 255, 0.25);
+  --shadow-card: 0px 4rpx 10rpx 0px rgba(69, 69, 69, 0.1);
+
+  /* ==================== 间距系统 ==================== */
+  --spacing-xs: 8rpx;
+  --spacing-sm: 12rpx;
+  --spacing-md: 16rpx;
+  --spacing-lg: 20rpx;
+  --spacing-xl: 24rpx;
+  --spacing-2xl: 32rpx;
+  --spacing-3xl: 40rpx;
+
+  /* ==================== 字体大小 ==================== */
+  --font-xs: 20rpx;
+  --font-sm: 24rpx;
+  --font-md: 26rpx;
+  --font-base: 28rpx;
+  --font-lg: 32rpx;
+  --font-xl: 36rpx;
+  --font-2xl: 40rpx;
+  --font-3xl: 48rpx;
+
+  /* ==================== 字体权重 ==================== */
+  --font-normal: 400;
+  --font-medium: 500;
+  --font-semibold: 550;
+  --font-bold: 600;
+
+  /* ==================== 状态颜色 ==================== */
+  --success-color: #1dc779;
+  --warning-color: #ffae1f;
+  --danger-color: #ff4d4f;
+  --error-color: #fa896b;
+  --info-color: #377dff;
+
+  /* ==================== 透明度 ==================== */
+  --opacity-disabled: 0.5;
+  --opacity-mask: 0.4;
+  --opacity-light: 0.63;
+}
