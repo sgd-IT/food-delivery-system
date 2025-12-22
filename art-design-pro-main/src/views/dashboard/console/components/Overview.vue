@@ -23,7 +23,7 @@
       </div>
       <div class="text-center">
         <p class="text-sm text-gray-600 mb-2">平均客单价</p>
-        <p class="text-2xl font-semibold text-theme">¥ {{ overviewData.unitPrice || 0 }}</p>
+        <p class="text-2xl font-semibold text-theme">¥ {{ (overviewData.unitPrice || 0).toFixed(2) }}</p>
       </div>
       <div class="text-center">
         <p class="text-sm text-gray-600 mb-2">新增用户</p>

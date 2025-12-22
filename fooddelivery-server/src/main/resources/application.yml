@@ -6,14 +6,14 @@ spring:
     active: dev
   main:
     allow-circular-references: true
-  # Druid 数据源配置（使用 sky.datasource 配置）
+  # Druid 数据源配置（使用 fooddelivery.datasource 配置）
   datasource:
     type: com.alibaba.druid.pool.DruidDataSource
     druid:
-      driver-class-name: ${sky.datasource.driver-class-name}
-      url: jdbc:mysql://${sky.datasource.host}:${sky.datasource.port}/${sky.datasource.database}?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=UTF-8&zeroDateTimeBehavior=convertToNull&useSSL=false&allowPublicKeyRetrieval=true
-      username: ${sky.datasource.username}
-      password: ${sky.datasource.password}
+      driver-class-name: ${fooddelivery.datasource.driver-class-name}
+      url: jdbc:mysql://${fooddelivery.datasource.host}:${fooddelivery.datasource.port}/${fooddelivery.datasource.database}?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=UTF-8&zeroDateTimeBehavior=convertToNull&useSSL=false&allowPublicKeyRetrieval=true
+      username: ${fooddelivery.datasource.username}
+      password: ${fooddelivery.datasource.password}
       # 连接池配置
       initial-size: 5
       min-idle: 5
@@ -42,10 +42,10 @@ spring:
         exclusions: "*.js,*.gif,*.jpg,*.png,*.css,*.ico,/druid/*"
 
   redis:
-    host: ${sky.redis.host}
-    port: ${sky.redis.port}
-    password: ${sky.redis.password}
-    database: ${sky.redis.database}
+    host: ${fooddelivery.redis.host}
+    port: ${fooddelivery.redis.port}
+    password: ${fooddelivery.redis.password}
+    database: ${fooddelivery.redis.database}
 
 mybatis:
   #mapper配置文件
@@ -58,7 +58,7 @@ mybatis:
 logging:
   level:
     com:
-      sky:
+      fooddelivery:
         mapper: debug
         service: info
         controller: info
@@ -67,7 +67,7 @@ logging:
     org.springframework.boot.autoconfigure.jdbc: DEBUG
     org.springframework.jdbc.datasource: DEBUG
 
-sky:
+fooddelivery:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     host: localhost
@@ -75,6 +75,11 @@ sky:
     database: food_delivery_system
     username: root
     password: 1234
+  redis:
+    host: 192.168.64.100
+    port: 6379
+    password: ""
+    database: 2
   jwt:
     # 设置jwt签名加密时使用的秘钥
     admin-secret-key: itcast
@@ -88,10 +93,10 @@ sky:
     user-token-name: authentication
 
 #  alioss:
-#    endpoint: ${sky.alioss.endpoint}
-#    access-key-id: ${sky.alioss.access-key-id}
-#    access-key-secret: ${sky.alioss.access-key-secret}
-#    bucket-name: ${sky.alioss.bucket-name}
+#    endpoint: ${fooddelivery.alioss.endpoint}
+#    access-key-id: ${fooddelivery.alioss.access-key-id}
+#    access-key-secret: ${fooddelivery.alioss.access-key-secret}
+#    bucket-name: ${fooddelivery.alioss.bucket-name}
 
   wechat:
     appid: wxee9f76b2cdc37dc2
