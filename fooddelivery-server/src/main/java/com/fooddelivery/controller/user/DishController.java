@@ -31,7 +31,7 @@ public class DishController {
 
     /**
      * 根据分类id查询菜品
-     * 查询时会优先从Redis缓存中获取，如果缓存中不存在则查询数据库并缓存结�?
+     * 查询时会优先从Redis缓存中获取，如果缓存中不存在则查询数据库并缓存结�?
      *
      * @param categoryId 分类ID
      * @return 菜品列表结果封装
@@ -40,10 +40,10 @@ public class DishController {
     public Result<List<DishVO>> list(Long categoryId) {
         //构造redis中的key  规则：dish_categoryId
         String key = "dish_" + categoryId;
-        //查询redis中是否存在菜品数�?
+        //查询redis中是否存在菜品数�?
         List<DishVO> list = (List<DishVO>) redisTemplate.opsForValue().get(key);
         if ((list != null) && (list.size() > 0)) {
-            //如果存在，直接返回，无须查询数据�?
+            //如果存在，直接返回，无须查询数据�?
             return Result.success(list);
         }
 

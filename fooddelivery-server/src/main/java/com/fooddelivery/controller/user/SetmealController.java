@@ -42,7 +42,7 @@ public class SetmealController {
     }
 
     /**
-     * 根据套餐id查询包含的菜品列�?
+     * 根据套餐id查询包含的菜品列�?
      *
      * @param id
      * @return

@@ -75,6 +75,11 @@ fooddelivery:
     database: food_delivery_system
     username: root
     password: 1234
+  redis:
+    host: 192.168.64.100
+    port: 6379
+    password: ""
+    database: 2
   jwt:
     # 设置jwt签名加密时使用的秘钥
     admin-secret-key: itcast
